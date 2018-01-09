@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.IO;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Lykke.Pay.Service.Invoces.Client;
 using System.Linq;
-using Common;
 using Lykke.Pay.Common;
 using Lykke.Pay.Invoice.AppCode;
+using Lykke.Pay.Service.Invoces.Client.Models;
+using Microsoft.AspNetCore.Http;
 using PagedList;
 
 namespace Lykke.Pay.Invoice.Controllers
@@ -140,7 +140,7 @@ namespace Lykke.Pay.Invoice.Controllers
 
         [Authorize]
         [HttpPost("profile")]
-        public async Task<IActionResult> Profile(Models.InvoiceRequest request, string returnUrl)
+        public async Task<IActionResult> Profile(Models.InvoiceRequest request, IFormFile upload)
         {
             if (request.Status != InvoiceStatus.Draft.ToString() && (string.IsNullOrEmpty(request.InvoiceNumber) || string.IsNullOrEmpty(request.ClientEmail) || string.IsNullOrEmpty(request.Amount)))
             {
@@ -152,6 +152,23 @@ namespace Lykke.Pay.Invoice.Controllers
             {
                 return BadRequest("Cannot create invoce!");
             }
+            long size = upload.Length;
+
+            var fileInfo = new IFileEntity
+            {
+                FileId = Guid.NewGuid().ToString(),
+                FileName = upload.FileName,
+                FileSize = (int)size,
+                InvoiceId = item.InvoiceId
+            };
+
+            using (var ms = new MemoryStream())
+            {
+                await upload.CopyToAsync(ms);
+                fileInfo.FileBodyBase64 = Convert.ToBase64String(ms.ToArray());
+            }
+
+            await _invoiceService.ApiInvoicesUploadFilePostWithHttpMessagesAsync(fileInfo);
             ViewBag.GeneratedItem = JsonConvert.SerializeObject(item);
             return View();
         }

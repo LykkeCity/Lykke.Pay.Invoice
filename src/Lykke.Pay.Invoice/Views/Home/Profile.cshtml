@@ -9,7 +9,7 @@
 </script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="~/css/jquery-confirm.css" />
-@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "createform", id = "createform" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "createform", id = "createform", enctype = "multipart/form-data" }))
 {
     <div class="create draft">
         <ul class="create__top">
@@ -66,6 +66,27 @@
                 <div class="create__item-name">Status</div>
                 <div class="create__item-description">Not created</div>
             </div>
+
+            <div class="invoice_files">
+
+                <div class="invoice_files__top">
+                    <div class="invoice_files__title">Files</div>
+                    <button type="button" name="button" class="btn invoice_files__add">Add file</button>
+                    <input type="file" name="upload" id="upload">
+                </div>
+                @*<div class="invoice_files__row">
+                    <div class="invoice_files__doc">pdf</div>
+                    <div class="invoice_files__block">
+                        <div class="invoice_files__name">BAS Rechnung Sponsoring Intrum - Sheet1.pdf</div>
+                    </div>
+                    <div class="invoice_files__size">57KB</div>
+                    <button type="button" name="button" class="invoice_files__button">
+                        <i class="icon icon--download"></i>
+                    </button>
+                </div>*@
+            </div>
+
+
             <div class="create__actions">
                 <button type="submit" name="button" class="btn create__button" id="generatebtn">Generate</button>
                 <button type="submit" name="button" class="btn btn--stroke create__link" id="draftbtn">Save draft</button>
@@ -148,13 +169,13 @@
                         <button type="button" name="button" class="btn btn_create balance__button">Create new invoice</button>
                     </div>
                     @*<div class="balance__export">
-                        Export XLSX file
-                        <a href="#" class="balance__download">Download</a>
-                    </div>
-                    <div class="balance__export">
-                        Export DTA file
-                        <a href="#" class="balance__download">Download</a>
-                    </div>*@
+                            Export XLSX file
+                            <a href="#" class="balance__download">Download</a>
+                        </div>
+                        <div class="balance__export">
+                            Export DTA file
+                            <a href="#" class="balance__download">Download</a>
+                        </div>*@
                 </div>
             </div>
             @Html.Partial("~/Views/Home/InvoiceGridPartial.cshtml")
@@ -167,5 +188,5 @@
     <script type="text/javascript" src="~/js/vendor/jquery-confirm.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="/js/profile.js" type="text/javascript"></script>
-   
+
 }
