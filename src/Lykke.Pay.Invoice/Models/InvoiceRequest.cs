@@ -32,7 +32,7 @@ namespace Lykke.Pay.Invoice.Models
         public string ClientId { get; set; }
         public string ClientUserId { get; set; }
 
-        public InvoiceEntity CreateEntity(TimeSpan orderLiveTime, string merchantId)
+        public InvoiceEntity CreateEntity(string merchantId)
         {
             if (string.IsNullOrEmpty(ClientName))
             {
@@ -41,9 +41,9 @@ namespace Lykke.Pay.Invoice.Models
             var invoiceid = string.IsNullOrEmpty(InvoiceId) ? Guid.NewGuid().ToString() : InvoiceId;
             if (string.IsNullOrEmpty(Amount))
                 Amount = "0";
-            StartDate = (StartDate == null) ? DateTime.Now.RepoDateStr() : StartDate;
+            StartDate = StartDate ?? DateTime.Now.RepoDateStr();
             var dueDate = DateTime.Parse(StartDate, CultureInfo.InvariantCulture);
-            dueDate = dueDate.Add(orderLiveTime);
+            dueDate = dueDate.AddDays(1).AddSeconds(-1);
             return new InvoiceEntity
             {
                 Amount = double.Parse(Amount, CultureInfo.InvariantCulture),

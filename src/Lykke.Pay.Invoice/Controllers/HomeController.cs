@@ -120,7 +120,7 @@ namespace Lykke.Pay.Invoice.Controllers
                 return Redirect("/home/profile");
             }
 
-            await _invoiceService.SaveInvoiceWithHttpMessagesAsync(model.Data.CreateEntity(OrderLiveTime, MerchantId));
+            await _invoiceService.SaveInvoiceWithHttpMessagesAsync(model.Data.CreateEntity(MerchantId));
             if (model.Data.Status != InvoiceStatus.Paid.ToString())
             {
                 model.InvoiceUrl = $"{SiteUrl}/invoice/{ model.Data.InvoiceId}";
@@ -146,7 +146,7 @@ namespace Lykke.Pay.Invoice.Controllers
             {
                 return View();
             }
-            var item = request.CreateEntity(OrderLiveTime, MerchantId);
+            var item = request.CreateEntity(MerchantId);
             var result = await _invoiceService.SaveInvoiceWithHttpMessagesAsync(item);
             if (result.Body != true)
             {
