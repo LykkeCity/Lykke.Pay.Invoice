@@ -16,7 +16,7 @@ namespace Lykke.Pay.Invoice.Models
         public GridHeader Header { get; set; }
         public GridFilter Filter { get; set; }
         public int Page { get; set; }
-        public int PageCount { get; set; }
+        public decimal PageCount { get; set; }
         
         public IList<IInvoiceEntity> Data { get; set; }
     }
